@@ -1,2 +1,2 @@
 # np2m
-neper to suitable mesh for multi-grain case simulation
+conver neper generated geo file to suitable geo file for multi-grains case simulation.
