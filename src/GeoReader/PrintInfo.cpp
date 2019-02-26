@@ -13,6 +13,7 @@ void GeoReader::PrintInfo() const
 	cout<<"*** number of surfaces= "<<nSurfaces<<endl;
 	cout<<"*** number of surface loops= "<<nSurfaceLoops<<endl;
 	cout<<"*** number of volumes= "<<nVolumes<<endl;
+	cout<<"*** tolerance="<<tolerance<<endl;
 	if(type==CIRCLE)
 	{
 		cout<<"*** JobType = cirlce case"<<endl;
@@ -20,6 +21,14 @@ void GeoReader::PrintInfo() const
 	else if(type==SPHERE)
 	{
 		cout<<"*** JobType = sphere case"<<endl;
+	}
+	if(IsSplitSurface)
+	{
+		cout<<"*** Split surface = true"<<endl;
+	}
+	else
+	{
+		cout<<"*** Split surface = false"<<endl;
 	}
 	cout<<"*************************************"<<endl<<endl;
 }

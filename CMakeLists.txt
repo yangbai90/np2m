@@ -39,7 +39,7 @@ set(INC ${INC} include/GeoReader.h)
 set(SRC ${SRC} src/GeoReader/GeoReader.cpp)
 set(SRC ${SRC} src/GeoReader/ReadGeoFile.cpp)
 set(SRC ${SRC} src/GeoReader/ModifyForCirlce.cpp src/GeoReader/ModifyForSphere.cpp)
-set(SRC ${SRC} src/GeoReader/PrintInfo.cpp)
+set(SRC ${SRC} src/GeoReader/PrintInfo.cpp src/GeoReader/JudgeFuns.cpp)
 
 
 add_executable(np2m ${SRC} ${INC})

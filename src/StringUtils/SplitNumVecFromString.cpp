@@ -48,7 +48,18 @@ vector<double> SplitNumVecFromString(string instr)
         	{
         		if(instr.at(i)=='-'&&(instr.at(i+1)>='0'&&instr.at(i+1)<='9'))
         		{
-        			if(instr.at(i-1)==' '||instr.at(i-1)==','||instr.at(i-1)=='='||instr.at(i-1)=='<'||instr.at(i-1)=='>'||instr.at(i-1)==':')
+        			if(instr.at(i-1)==' '||instr.at(i-1)==','||
+				   instr.at(i-1)=='='||instr.at(i-1)=='<'||
+				   instr.at(i-1)=='>'||instr.at(i-1)==':'||
+				   instr.at(i-1)=='{'||instr.at(i-1)=='}'||
+				   instr.at(i-1)=='['||instr.at(i-1)==']'||
+				   instr.at(i-1)=='('||instr.at(i-1)==')'||
+				   instr.at(i-1)=='~'||instr.at(i-1)=='!'||
+				   instr.at(i-1)=='@'||instr.at(i-1)=='#'||
+				   instr.at(i-1)=='$'||instr.at(i-1)=='%'||
+				   instr.at(i-1)=='^'||instr.at(i-1)=='&'||
+				   instr.at(i-1)=='*'||instr.at(i-1)==';'||
+				   instr.at(i-1)=='/'||instr.at(i-1)=='?')
         			{
         				start=i;
         			}

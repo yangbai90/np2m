@@ -6,7 +6,7 @@
 #include <vector>
 #include <fstream>
 #include <cstring>
-
+#include <cmath>
 #include "StringUtils.h"
 
 using namespace std;
@@ -27,8 +27,10 @@ public:
 	void SetSplitBoundaryFlag(bool flag=true) {IsSplitBoundary=flag;}
 	void SetSplitInterfaceFlag(bool flag=false) {IsSplitInterface=flag;}
 	void SetFileName(string filename) {geofilename=filename;}
+	void SetTolerance(double tol=1.0e-6) {tolerance=tol;}
 
-	inline int GetIthNodeJthCoords(int i,int j) const {return Points[(i-1)*3+j-1];}
+
+	inline double GetIthNodeJthCoords(int i,int j) const {return Points[(i-1)*3+j-1];}
 	inline int GetIthLineJthNodeID(int i,int j) const {return Lines[i-1][j-1];}
 	inline int GetIthSurfaceLineLoopID(int i) const {return Surfaces[i-1];}
 	inline int GetIthVolumeSurfaceLoopID(int i) const {return Volumes[i-1];}
@@ -43,6 +45,9 @@ public:
 private:
 	void ReadGeoFile();
 	void ModifyForCirlce();
+	bool IsIthPointOnSphereSurface(int i);
+	bool IsIthLineOnSphereSurface(int i);
+	bool IsIthSurfaceOnSphereSurface(int i);
 	void ModifyForSphere();
 
 private:
@@ -67,10 +72,13 @@ private:
 	bool PrintFlag;
 	string domain="circle";
 	double size=1.0;
+	double tolerance=1.0e-3;
 	bool IsPrint=true;
 	bool IsSplitSurface=true;
 	bool IsSplitInterface=false;
 	bool IsSplitBoundary=true;
+
+	double Xmax,Xmin,Ymax,Ymin,Zmax,Zmin;
 
 };
 

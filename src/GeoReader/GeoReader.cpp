@@ -42,7 +42,7 @@ void GeoReader::Run(int args,char *argv[])
 	SetSplitBoundaryFlag(true);
 	SetMeshSize(1.0);
 	SetPrintFlag(true);
-
+	SetTolerance(1.0e-3);
 
 	if(args==1)
 	{
@@ -180,6 +180,18 @@ void GeoReader::Run(int args,char *argv[])
 				else
 				{
 					cout<<"**** Error: no flag after -interface !!!"<<endl;
+				}
+			}
+			else if(strcmp("-tol",argv[i])==0)
+			{
+				if(i<args-1)
+				{
+					SetTolerance(atof(argv[i+1]));
+				}
+				else
+				{
+					cout<<"**** Error: no tolerance is given after -tol !!!"<<endl;
+					abort();
 				}
 			}
 		}

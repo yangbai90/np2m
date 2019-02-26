@@ -11,6 +11,10 @@ void GeoReader::ReadGeoFile()
 	ifstream in;
 	in.open(geofilename.c_str(),ios::in);
 
+	Xmax=-1.0e10;Xmin=1.0e10;
+	Ymax=-1.0e10;Ymin=1.0e10;
+	Zmax=-1.0e10;Zmin=1.0e10;
+
 	while(!in.is_open())
 	{
 		cout<<"**** Error: can't open file(="<<geofilename<<")!!!"<<endl;
@@ -25,6 +29,7 @@ void GeoReader::ReadGeoFile()
 		if(line.find("Point (")!=string::npos)
 		{
 			numbers=SplitNumVecFromString(line);
+			//cout<<numbers[0]<<" "<<numbers[1]<<" "<<numbers[2]<<endl; 
 			if(numbers.size()!=4)
 			{
 				// Data format:
@@ -38,6 +43,15 @@ void GeoReader::ReadGeoFile()
 				Points.push_back(numbers[2]);
 				Points.push_back(numbers[3]);
 				nPoints+=1;
+
+				if(numbers[1]>Xmax) Xmax=numbers[1];
+				if(numbers[1]<Xmin) Xmin=numbers[1];
+
+				if(numbers[2]>Ymax) Ymax=numbers[2];
+				if(numbers[2]<Ymin) Ymin=numbers[2];
+
+				if(numbers[3]>Zmax) Zmax=numbers[3];
+				if(numbers[3]<Zmin) Zmin=numbers[3];
 			}
 		}
 		else if(line.find("Line (")!=string::npos)
