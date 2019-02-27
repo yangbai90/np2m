@@ -27,7 +27,7 @@ for sphere domain:
 ./np2m your_sphere.geo -domain sphere -tol 0.1 -print
 ```
 
-for more optioins
+for more options
 ```sh
 ./np2m -help
 ```
