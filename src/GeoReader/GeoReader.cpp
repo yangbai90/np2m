@@ -28,6 +28,7 @@ void GeoReader::Help() const
 	cout<<"*** -surface true [false]               ***"<<endl;
 	cout<<"*** -boundary true [false]              ***"<<endl;
 	cout<<"*** -interface true [false]             ***"<<endl;
+	cout<<"*** -tol 5.0e-2 (tolerance for spliting)***"<<endl;
 	cout<<"*******************************************"<<endl;
 }
 //******************************************
@@ -42,7 +43,9 @@ void GeoReader::Run(int args,char *argv[])
 	SetSplitBoundaryFlag(true);
 	SetMeshSize(1.0);
 	SetPrintFlag(true);
-	SetTolerance(1.0e-3);
+	SetTolerance(5.0e-2);
+	domain="circle";
+	type=CIRCLE;
 
 	if(args==1)
 	{
@@ -54,6 +57,7 @@ void GeoReader::Run(int args,char *argv[])
 		if(strcmp("-help",argv[1])==0)
 		{
 			Help();
+			return;
 		}
 		else
 		{
@@ -78,6 +82,19 @@ void GeoReader::Run(int args,char *argv[])
 		{
 			if(strcmp("-print",argv[i])==0)
 			{
+				if(i<args-1)
+				{
+					if(string(argv[i+1]).find("false")!=string::npos)
+					{
+						SetPrintFlag(false);
+						continue;
+					}
+					else if(string(argv[i+1]).find("true")!=string::npos)
+					{
+						SetPrintFlag(true);
+						continue;
+					}
+				}
 				SetPrintFlag(true);
 			}
 			else if(strcmp("-size",argv[i])==0)

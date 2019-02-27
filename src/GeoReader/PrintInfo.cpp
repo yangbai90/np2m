@@ -14,6 +14,7 @@ void GeoReader::PrintInfo() const
 	cout<<"*** number of surface loops= "<<nSurfaceLoops<<endl;
 	cout<<"*** number of volumes= "<<nVolumes<<endl;
 	cout<<"*** tolerance="<<tolerance<<endl;
+	cout<<"*** domain="<<domain<<endl;
 	if(type==CIRCLE)
 	{
 		cout<<"*** JobType = cirlce case"<<endl;

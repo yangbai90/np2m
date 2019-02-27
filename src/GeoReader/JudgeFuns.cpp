@@ -12,12 +12,13 @@ bool GeoReader::IsIthPointOnSphereSurface(int i)
 	cx=0.5*(Xmax+Xmin);
 	cy=0.5*(Ymax+Ymin);
 	cz=0.0;
-	if(type==CIRCLE)
+	r=0.0;
+	if(domain=="circle")
 	{
 		cz=0.0;
 		r=0.5*(0.5*(Xmax-Xmin)+0.5*(Ymax-Ymin));
 	}
-	else if(type==SPHERE)
+	else if(domain=="sphere")
 	{
 		cz=0.5*(Zmax+Zmin);
 		r=(0.5*(Xmax-Xmin)+0.5*(Ymax-Ymin)+0.5*(Zmax-Zmin))/3.0;

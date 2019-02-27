@@ -14,9 +14,21 @@ then run:
 ```
 then a new geo file named 'new'+your.geo==>'newyour.geo' file will be generated. Then you can use Gmsh for the mesh generation.
 
-you can check the available options via:
 
+# Usage
+
+for cirlce domain:
+```sh
+./np2m your_circle.geo -tol 0.1 -print
 ```
+
+for sphere domain:
+```sh
+./np2m your_sphere.geo -domain sphere -tol 0.1 -print
+```
+
+for more optioins
+```sh
 ./np2m -help
 ```
 

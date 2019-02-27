@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstring>
+#include <chrono>
 
 #include "StringUtils.h"
 
@@ -21,7 +22,12 @@ int main(int args,char *argv[])
 	
 	GeoReader reader;
 
+	auto start=chrono::high_resolution_clock::now();
 	reader.Run(args,argv);
+	auto end=chrono::high_resolution_clock::now();
+
+	cout<<"*** Time elapsed: "
+	    <<chrono::duration_cast<chrono::microseconds>(end-start).count()/1.0e6<<" s"<<endl;
 
 	return 0;
 }

@@ -67,7 +67,7 @@ void GeoReader::ModifyForSphere()
 	//*****************************************************
 	if(IsSplitSurface)
 	{
-		cout<<"Number of surface ID"<<SurfaceID.size()<<endl;
+		cout<<"Number of surface surface ID="<<SurfaceID.size()<<endl;
 		if(SurfaceID.size()>1)
 		{
 			out<<"Physical Surface (\"surface\")={";
