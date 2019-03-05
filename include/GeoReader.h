@@ -50,12 +50,39 @@ private:
 	bool IsIthSurfaceOnSphereSurface(int i);
 	void ModifyForSphere();
 
+    void ModifyForCubic();
+    // For left
+    bool IsIthPointOnLeftSurface(int i);
+    bool IsIthLineOnLeftSurface(int i);
+    bool IsIthSurfaceOnLeftSurface(int i);
+    // For right
+    bool IsIthPointOnRightSurface(int i);
+    bool IsIthLineOnRightSurface(int i);
+    bool IsIthSurfaceOnRightSurface(int i);
+    // For bottom
+    bool IsIthPointOnBottomSurface(int i);
+    bool IsIthLineOnBottomSurface(int i);
+    bool IsIthSurfaceOnBottomSurface(int i);
+    // For top
+    bool IsIthPointOnTopSurface(int i);
+    bool IsIthLineOnTopSurface(int i);
+    bool IsIthSurfaceOnTopSurface(int i);
+    // For back
+    bool IsIthPointOnBackSurface(int i);
+    bool IsIthLineOnBackSurface(int i);
+    bool IsIthSurfaceOnBackSurface(int i);
+    // For bottom
+    bool IsIthPointOnFrontSurface(int i);
+    bool IsIthLineOnFrontSurface(int i);
+    bool IsIthSurfaceOnFrontSurface(int i);
+
 private:
 
 	enum JobType
 	{
 		CIRCLE,
-		SPHERE 
+		SPHERE,
+        CUBIC 
 	};
 
 	string geofilename,newgeofilename;
