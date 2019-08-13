@@ -260,7 +260,7 @@ bool GeoReader::IsIthLineOnBackSurface(int i)
 }
 bool GeoReader::IsIthSurfaceOnBackSurface(int i)
 {
-    bool IsSurfaceOn;
+    bool IsSurfaceOn=false;
     int lineid;
     for(unsigned int j=0;j<LineLoops[i-1].size();j++)
     {
@@ -276,7 +276,7 @@ bool GeoReader::IsIthSurfaceOnBackSurface(int i)
             return false;
         }
     }
-    return true;
+    return IsSurfaceOn;
 }
 //******************************
 bool GeoReader::IsIthPointOnFrontSurface(int i)

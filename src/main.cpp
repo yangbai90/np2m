@@ -27,7 +27,7 @@ int main(int args,char *argv[])
 	auto end=chrono::high_resolution_clock::now();
 
 	cout<<"*** Time elapsed: "
-	    <<chrono::duration_cast<chrono::microseconds>(end-start).count()/1.0e6<<" s"<<endl;
+	    <<chrono::duration_cast<chrono::microseconds>(end-start).count()/1.0e6<<" [s]"<<endl;
 
 	return 0;
 }

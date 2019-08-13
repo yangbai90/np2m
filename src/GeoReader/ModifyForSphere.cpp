@@ -97,4 +97,6 @@ void GeoReader::ModifyForSphere()
 	    <<", radius="<<(0.5*(Xmax-Xmin)+0.5*(Ymax-Ymin)+0.5*(Zmax-Zmin))/3.0<<endl;
 	cout<<"**** Write to "<<newgeofilename<<" !!!"<<endl;
 
+
+	type=SPHERE;
 }

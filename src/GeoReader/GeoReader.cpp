@@ -122,6 +122,9 @@ void GeoReader::Run(int args,char *argv[])
 						abort();
 					}
 					domain=string(argv[i+1]);
+					if(domain.find("sphere")!=string::npos){
+						type=SPHERE;
+					}
 				}
 				else
 				{
