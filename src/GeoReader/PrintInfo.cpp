@@ -1,35 +1,16 @@
 #include "GeoReader.h"
 
-
-void GeoReader::PrintInfo() const
+void GeoReader::PrintInfo()
 {
-	cout<<"*************************************"<<endl;
-	cout<<"*** Geo file information:         ***"<<endl;
-	cout<<"*** file name= "<<geofilename<<endl;
-	cout<<"*** new  name= "<<newgeofilename<<endl;
-	cout<<"*** number of points= "<<nPoints<<endl;
-	cout<<"*** number of lines= "<<nLines<<endl;
-	cout<<"*** number of line loops= "<<nLineLoops<<endl;
-	cout<<"*** number of surfaces= "<<nSurfaces<<endl;
-	cout<<"*** number of surface loops= "<<nSurfaceLoops<<endl;
-	cout<<"*** number of volumes= "<<nVolumes<<endl;
-	cout<<"*** tolerance="<<tolerance<<endl;
-	cout<<"*** domain="<<domain<<endl;
-	if(type==CIRCLE)
-	{
-		cout<<"*** JobType = cirlce case"<<endl;
-	}
-	else if(type==SPHERE)
-	{
-		cout<<"*** JobType = sphere case"<<endl;
-	}
-	if(IsSplitSurface)
-	{
-		cout<<"*** Split surface = true"<<endl;
-	}
-	else
-	{
-		cout<<"*** Split surface = false"<<endl;
-	}
-	cout<<"*************************************"<<endl<<endl;
+    cout<<"******************************************************************"<<endl;
+    cout<<"*** Information summary:                                       ***"<<endl;
+    printf("***   Point=%6d, Line=%6d, Surface=%6d, Volume=%6d ***\n",GetPointsNum(),
+                                                                  GetLinesNum(),
+                                                                  GetSurfacesNum(),
+                                                                  GetVolumesNum());
+    printf("***   Physical dim max=%4d, dim min=%4d                      ***\n",GetMinDim(),GetMaxDim());
+
+    printf("***   Domain=%10s                                        ***\n",_Domain.c_str());
+
+    cout<<"******************************************************************"<<endl;
 }

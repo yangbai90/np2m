@@ -36,10 +36,8 @@ set(SRC ${SRC} src/StringUtils/SplitStringVecBySymbol.cpp)
 ### For GeoReader 
 ####################################
 set(INC ${INC} include/GeoReader.h)
-set(SRC ${SRC} src/GeoReader/GeoReader.cpp)
-set(SRC ${SRC} src/GeoReader/ReadGeoFile.cpp)
-set(SRC ${SRC} src/GeoReader/ModifyForCirlce.cpp src/GeoReader/ModifyForSphere.cpp)
-set(SRC ${SRC} src/GeoReader/PrintInfo.cpp src/GeoReader/JudgeFuns.cpp)
+set(SRC ${SRC} src/GeoReader/GeoReader.cpp src/GeoReader/GeoReaderRun.cpp)
+set(SRC ${SRC} src/GeoReader/PrintHelper.cpp src/GeoReader/PrintInfo.cpp)
 
 
 add_executable(np2m ${SRC} ${INC})
