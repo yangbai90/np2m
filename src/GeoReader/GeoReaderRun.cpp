@@ -1,7 +1,6 @@
 #include "GeoReader.h"
 
-void GeoReader::Run(int args,char *argv[])
-{
+void GeoReader::Run(int args,char *argv[]){
     string str,substr;
     bool HasHelper=false;
     bool HasPrint=false;
@@ -16,13 +15,13 @@ void GeoReader::Run(int args,char *argv[])
         substr=str.substr(str.length()-4);
         if(str.compare(0,5,"-help")==0){
             PrintHelper();
+            return;
         }
         else if(string(argv[2-1]).compare(0,4,".geo")==0){
             if(str.length()>4){
                 _GeoFileName=str;
             }
-            else
-            {
+            else{
                 cout<<"*** Error: incorrect geo file name is given !!!                ***"<<endl;
                 return;
             }
@@ -34,8 +33,7 @@ void GeoReader::Run(int args,char *argv[])
             if(str.length()>4){
                 _GeoFileName=str;
             }
-            else
-            {
+            else{
                 cout<<"*** Error: incorrect geo file name is given !!!                ***"<<endl;
                 return;
             }
@@ -44,15 +42,17 @@ void GeoReader::Run(int args,char *argv[])
             str=string(argv[i]);
             if(str.compare("-help")==0){
                 HasHelper=true;
+                cout<<"***------------------------------------------------------------***"<<endl;
+                cout<<"*** Warning: -help flage detected, ignore other flags!!!       ***"<<endl;
+                cout<<"***------------------------------------------------------------***"<<endl;
+                PrintHelper();
+                return;
             }
-            else if(str.compare("-print")==0)
-            {
-                if(i==args-1)
-                {
+            else if(str.compare("-print")==0){
+                if(i==args-1){
                     HasPrint=true;
                 }
-                else
-                {
+                else{
                     if(string(argv[i+1]).compare("true")==0||
                        string(argv[i+1]).compare("TRUE")==0){
                         HasPrint=true;
@@ -112,21 +112,18 @@ void GeoReader::Run(int args,char *argv[])
     }
 
 
-    if(HasHelper)
-    {
+    if(HasHelper){
         PrintHelper();
         return;
     }
 
 
-    if(!HasDomain)
-    {
+    if(!HasDomain){
         cout<<"*** Warning: no domain is assigned, then 'circle' is taken !!! ***"<<endl;
     }
 
 
-    if(HasPrint)
-    {
+    if(HasPrint){
         PrintInfo();
     }
 }

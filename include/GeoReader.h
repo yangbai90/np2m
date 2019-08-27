@@ -7,6 +7,8 @@
 #include <fstream>
 #include <vector>
 
+#include "StringUtils.h"
+
 using namespace std;
 
 class GeoReader
@@ -21,6 +23,16 @@ private:
     void PrintInfo();
 
 private:
+    void ReadGeoFile();
+    void RunJobForCircle();
+    void RunJobFor14thCircle();
+    void RunJobForRect();
+    void RunJobForSphere();
+    void RunJobFor18thSphere();
+    void RunJobForCubic();
+    void RunJobForCylinder();
+
+private:
     inline int GetPointsNum() const {return _nNodes;}
     inline int GetLinesNum() const {return _nLines;}
     inline int GetSurfacesNum() const {return _nSurfaces;}
@@ -33,7 +45,7 @@ private:
     // information for geometric
     double _Xmin,_Xmax,_Ymin,_Ymax,_Zmin,_Zmax;
     int _nDim,_nDimMax,_nDimMin;
-    int _nNodes,_nLines,_nSurfaces,_nVolumes;
+    int _nNodes,_nLines,_nLineLoops,_nSurfaces,_nVolumes;
 
     vector<double> _NodeCoords;
     vector<int> _Line;
