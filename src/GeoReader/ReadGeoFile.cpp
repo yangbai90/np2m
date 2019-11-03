@@ -25,6 +25,8 @@ void GeoReader::ReadGeoFile(){
     _NodeCoords.clear();_nNodes=0;
     _Line.clear();_nLines=0;
     _LineLoop.clear();_nLineLoops=0;
+    _nSurfaces=0;
+    _nSurfaceLoops=0;_nVolumes=0;
     while(!in.eof()){
         getline(in,line);
         if(line.find("Point (")!=string::npos){
@@ -126,10 +128,22 @@ void GeoReader::ReadGeoFile(){
 				surfaceid.clear();
                 for(unsigned int i=1;i<numbers.size();i++){
                     surfaceid.push_back(int(numbers[i]));
-                    cout<<int(numbers[i])<<" ";
+                    // cout<<int(numbers[i])<<" ";
                 }
-                cout<<endl;
+                // cout<<endl;
                 _SurfaceLoop.push_back(surfaceid);
+                _nSurfaceLoops+=1;
+            }
+        }
+        else if(line.find("Volume (")!=string::npos){
+            // Read Plane surface information
+			strvec=SplitStringVecBySymbol(line,';');
+			numbers=SplitNumVecFromString(strvec[0]);
+            if(numbers.size()<2){
+                cout<<"**** Error: Volume () must have 2 numbers!!!"<<endl;
+				abort();
+            }
+            else{
                 _nVolumes+=1;
             }
         }

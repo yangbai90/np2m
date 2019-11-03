@@ -6,6 +6,7 @@ void GeoReader::Run(int args,char *argv[]){
     bool HasPrint=true;
     bool HasDomain=false;
     bool HasGeoFile=false;
+    vector<double> numbers;
     if(args==1){
         cout<<"******************************************************************"<<endl;
         cout<<"*** Error: no geo file name is given !!!                       ***"<<endl;
@@ -49,6 +50,7 @@ void GeoReader::Run(int args,char *argv[]){
                     if(substr.compare(substr.length()-4,4,".geo")==0){
                         if(substr.length()>4){
                             _GeoFileName=substr;
+                            _NewGeoFileName="new"+_GeoFileName;
                             HasGeoFile=true;
                         }
                         else{
@@ -127,6 +129,66 @@ void GeoReader::Run(int args,char *argv[]){
                     }
                 }
             }
+            else if(str.compare("-tol")==0){
+                if(i==args-1){
+                    cout<<"*** Error: no number found after -tol !!!                      ***"<<endl;
+                    cout<<"******************************************************************"<<endl;
+                    cout<<"*** np2m exit due to some errors !!!                           ***"<<endl;
+                    cout<<"******************************************************************"<<endl;
+                    abort();
+                }
+                else{
+                    substr=string(argv[i+1]);
+                    numbers=SplitNumVecFromString(substr);
+                    if(numbers.size()<1){
+                        cout<<"*** Error: no number found after -tol !!!                      ***"<<endl;
+                        cout<<"******************************************************************"<<endl;
+                        cout<<"*** np2m exit due to some errors !!!                           ***"<<endl;
+                        cout<<"******************************************************************"<<endl;
+                        abort();
+                    }
+                    else{
+                        if(numbers[0]<1.0e-13){
+                            cout<<"*** Error: invalid value for -tol option !!!                   ***"<<endl;
+                            cout<<"******************************************************************"<<endl;
+                            cout<<"*** np2m exit due to some errors !!!                           ***"<<endl;
+                            cout<<"******************************************************************"<<endl;
+                            abort();
+                        }
+                        SetTol(numbers[0]);
+                    }
+                }
+            }
+            else if(str.compare("-size")==0){
+                if(i==args-1){
+                    cout<<"*** Error: no number found after -size !!!                     ***"<<endl;
+                    cout<<"******************************************************************"<<endl;
+                    cout<<"*** np2m exit due to some errors !!!                           ***"<<endl;
+                    cout<<"******************************************************************"<<endl;
+                    abort();
+                }
+                else{
+                    substr=string(argv[i+1]);
+                    numbers=SplitNumVecFromString(substr);
+                    if(numbers.size()<1){
+                        cout<<"*** Error: no number found after -size !!!                     ***"<<endl;
+                        cout<<"******************************************************************"<<endl;
+                        cout<<"*** np2m exit due to some errors !!!                           ***"<<endl;
+                        cout<<"******************************************************************"<<endl;
+                        abort();
+                    }
+                    else{
+                        if(numbers[0]<1.0e-13){
+                            cout<<"*** Error: invalid value for -size option !!!                  ***"<<endl;
+                            cout<<"******************************************************************"<<endl;
+                            cout<<"*** np2m exit due to some errors !!!                           ***"<<endl;
+                            cout<<"******************************************************************"<<endl;
+                            abort();
+                        }
+                        SetSize(numbers[0]);
+                    }
+                }
+            }
         }
     }
 
@@ -164,9 +226,10 @@ void GeoReader::Run(int args,char *argv[]){
         RunJobForCircle();
         break;
     case JobType::RECTANGLE:
-        // RunJobForRect();
+        RunJobForRect();
         break;
     case JobType::CUBIC:
+        RunJobForCubic();
         break;
     default:
         cout<<"******************************************************************"<<endl;

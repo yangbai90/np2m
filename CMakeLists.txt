@@ -39,8 +39,12 @@ set(INC ${INC} include/GeoReader.h)
 set(SRC ${SRC} src/GeoReader/GeoReader.cpp src/GeoReader/GeoReaderRun.cpp)
 set(SRC ${SRC} src/GeoReader/PrintHelper.cpp src/GeoReader/PrintInfo.cpp)
 
-set(SRC ${SRC} src/GeoReader/RunJobForCircle.cpp)
 set(SRC ${SRC} src/GeoReader/ReadGeoFile.cpp)
+set(SRC ${SRC} src/GeoReader/RunJobForCircle.cpp)
+set(SRC ${SRC} src/GeoReader/RunJobForRect.cpp)
+set(SRC ${SRC} src/GeoReader/RunJobForCubic.cpp)
+set(SRC ${SRC} src/GeoReader/JudgeFuns.cpp)
+
 
 
 add_executable(np2m-dev ${SRC} ${INC})
