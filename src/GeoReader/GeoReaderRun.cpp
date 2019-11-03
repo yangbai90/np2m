@@ -3,8 +3,9 @@
 void GeoReader::Run(int args,char *argv[]){
     string str,substr;
     bool HasHelper=false;
-    bool HasPrint=false;
+    bool HasPrint=true;
     bool HasDomain=false;
+    bool HasGeoFile=false;
     if(args==1){
         cout<<"******************************************************************"<<endl;
         cout<<"*** Error: no geo file name is given !!!                       ***"<<endl;
@@ -17,28 +18,16 @@ void GeoReader::Run(int args,char *argv[]){
             PrintHelper();
             return;
         }
-        else if(string(argv[2-1]).compare(0,4,".geo")==0){
-            if(str.length()>4){
-                _GeoFileName=str;
-            }
-            else{
-                cout<<"*** Error: incorrect geo file name is given !!!                ***"<<endl;
-                return;
-            }
+        else{
+            cout<<"***------------------------------------------------------------***"<<endl;
+            cout<<"*** Error: invalid options for np2m, please check the helper!!!***"<<endl;
+            cout<<"***------------------------------------------------------------***"<<endl;
+            return;
         }
     }
     else
     {
-        if(string(argv[2-1]).compare(0,4,".geo")==0){
-            if(str.length()>4){
-                _GeoFileName=str;
-            }
-            else{
-                cout<<"*** Error: incorrect geo file name is given !!!                ***"<<endl;
-                return;
-            }
-        }
-        for(int i=2;i<args;++i){
+        for(int i=1;i<args;++i){
             str=string(argv[i]);
             if(str.compare("-help")==0){
                 HasHelper=true;
@@ -47,6 +36,35 @@ void GeoReader::Run(int args,char *argv[]){
                 cout<<"***------------------------------------------------------------***"<<endl;
                 PrintHelper();
                 return;
+            }
+            else if(str.compare("-i")==0&&str.size()==2){
+                if(i==args-1){
+                    cout<<"***------------------------------------------------------------***"<<endl;
+                    cout<<"*** Error: no geo file name found after '-i'                   ***"<<endl;
+                    cout<<"***------------------------------------------------------------***"<<endl;
+                    return;
+                }
+                else{
+                    substr=argv[i+1];
+                    if(substr.compare(substr.length()-4,4,".geo")==0){
+                        if(substr.length()>4){
+                            _GeoFileName=substr;
+                            HasGeoFile=true;
+                        }
+                        else{
+                            cout<<"***------------------------------------------------------------***"<<endl;
+                            cout<<"*** Error: incorrect geo file name is given !!!                ***"<<endl;
+                            cout<<"***------------------------------------------------------------***"<<endl;
+                            return;
+                        }
+                    }
+                    else{
+                        cout<<"***------------------------------------------------------------***"<<endl;
+                        cout<<"*** Error: incorrect geo file name is given !!!                ***"<<endl;
+                        cout<<"***------------------------------------------------------------***"<<endl;
+                        return;
+                    }
+                }
             }
             else if(str.compare("-print")==0){
                 if(i==args-1){
@@ -67,6 +85,7 @@ void GeoReader::Run(int args,char *argv[]){
                 }
             }
             else if(str.compare("-domain")==0){
+                
                 if(i==args-1){
                     cout<<"*** Error: no flag found after '-domain' !!!                   ***"<<endl;
                     return;
@@ -117,10 +136,47 @@ void GeoReader::Run(int args,char *argv[]){
         return;
     }
 
+    if(!HasGeoFile){
+        cout<<"***------------------------------------------------------------***"<<endl;
+        cout<<"*** Error: no geo file name is given, '-i xx.geo' is required!!***"<<endl;
+        cout<<"******************************************************************"<<endl;
+        cout<<"*** np2m exit due to some errors !!!                           ***"<<endl;
+        cout<<"******************************************************************"<<endl;
+        abort();
+    }
+
 
     if(!HasDomain){
-        cout<<"*** Warning: no domain is assigned, then 'circle' is taken !!! ***"<<endl;
+        cout<<"***------------------------------------------------------------***"<<endl;
+        cout<<"*** Error: no domain is assigned, -domain xxx is required !!!  ***"<<endl;
+        cout<<"******************************************************************"<<endl;
+        cout<<"*** np2m exit due to some errors !!!                           ***"<<endl;
+        cout<<"******************************************************************"<<endl;
+        abort();
     }
+
+
+    // First we read the geofile
+    ReadGeoFile();
+
+    switch(_JobType){
+    case JobType::CIRCLE:
+        RunJobForCircle();
+        break;
+    case JobType::RECTANGLE:
+        // RunJobForRect();
+        break;
+    case JobType::CUBIC:
+        break;
+    default:
+        cout<<"******************************************************************"<<endl;
+        cout<<"*** Error: unsupported job type, please check the helper !!!   ***"<<endl;
+        cout<<"******************************************************************"<<endl;
+        cout<<"*** np2m exit due to some errors !!!                           ***"<<endl;
+        cout<<"******************************************************************"<<endl;
+        abort();
+    }
+
 
 
     if(HasPrint){

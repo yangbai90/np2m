@@ -8,7 +8,7 @@ void GeoReader::PrintInfo()
                                                                   GetLinesNum(),
                                                                   GetSurfacesNum(),
                                                                   GetVolumesNum());
-    printf("***   Physical dim max=%4d, dim min=%4d                      ***\n",GetMinDim(),GetMaxDim());
+    printf("***   Physical dim max=%4d, dim min=%4d                      ***\n",GetMaxDim(),GetMinDim());
 
     printf("***   Domain=%10s                                        ***\n",_Domain.c_str());
 

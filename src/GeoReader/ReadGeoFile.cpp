@@ -13,6 +13,7 @@ void GeoReader::ReadGeoFile(){
 	_Zmax=-1.0e16;_Zmin=1.0e16;
     double xtol,ytol,ztol;
     xtol=0.0;ytol=0.0;ztol=0.0;
+    _nDimMax=0;_nDimMin=3;_nDim=0;
 
     while(!in.is_open()){
 		cout<<"**** Error: can't open file(="<<_GeoFileName<<")!!!"<<endl;
@@ -65,6 +66,7 @@ void GeoReader::ReadGeoFile(){
 				_Line.push_back(int(numbers[2]));
 				_nLines+=1;
             }
+            _nDim=1;_nDimMax=1;_nDimMin=1;
         }
         else if(line.find("Line Loop (")!=string::npos){
             // Read line loop
@@ -74,6 +76,8 @@ void GeoReader::ReadGeoFile(){
 				abort();
             }
             else{
+                _nDim=2;_nDimMax=2;_nDimMin=1;
+
                 vector<int> lineid;
 				lineid.clear();
                 for(unsigned int i=1;i<numbers.size();i++){
@@ -92,9 +96,42 @@ void GeoReader::ReadGeoFile(){
 				abort();
             }
             else{
+                _nSurfaces+=1;
+            }
+        }
+        else if(line.find("Physical Surface (")!=string::npos){
+            // Read Plane surface information
+			strvec=SplitStringVecBySymbol(line,';');
+			numbers=SplitNumVecFromString(strvec[0]);
+            if(numbers.size()<2){
+                cout<<"**** Error: Physical Surface () must have 2 numbers!!!"<<endl;
+				abort();
+            }
+            else{
                 
             }
         }
-    }
+        else if(line.find("Surface Loop (")!=string::npos){
+            // Read Plane surface information
+			strvec=SplitStringVecBySymbol(line,';');
+			numbers=SplitNumVecFromString(strvec[0]);
+            if(numbers.size()<2){
+                cout<<"**** Error: Surface Loop () must have 2 numbers!!!"<<endl;
+				abort();
+            }
+            else{
+                 _nDim=3;_nDimMax=3;
 
+                vector<int> surfaceid;
+				surfaceid.clear();
+                for(unsigned int i=1;i<numbers.size();i++){
+                    surfaceid.push_back(int(numbers[i]));
+                    cout<<int(numbers[i])<<" ";
+                }
+                cout<<endl;
+                _SurfaceLoop.push_back(surfaceid);
+                _nVolumes+=1;
+            }
+        }
+    }
 }
