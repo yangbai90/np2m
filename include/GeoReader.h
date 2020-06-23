@@ -3,110 +3,114 @@
 
 #include <iostream>
 #include <iomanip>
-#include <vector>
+#include <string>
 #include <fstream>
-#include <cstring>
-#include <cmath>
+#include <vector>
+
 #include "StringUtils.h"
 
 using namespace std;
 
-
 class GeoReader
 {
 public:
-	GeoReader();
+    GeoReader();
+    void Run(int args,char *argv[]);
 
-	void Help() const;
-	void Run(int args,char *argv[]);
-
-	void SetDomain(string shape="circle");
-	void SetPrintFlag(bool flag=true) {IsPrint=flag;}
-	void SetMeshSize(double dx=1.0) {size=dx;}
-	void SetSplitSurfaceFlag(bool flag=true) {IsSplitSurface=flag;}
-	void SetSplitBoundaryFlag(bool flag=true) {IsSplitBoundary=flag;}
-	void SetSplitInterfaceFlag(bool flag=false) {IsSplitInterface=flag;}
-	void SetFileName(string filename) {geofilename=filename;}
-	void SetTolerance(double tol=1.0e-6) {tolerance=tol;}
-
-
-	inline double GetIthNodeJthCoords(int i,int j) const {return Points[(i-1)*3+j-1];}
-	inline int GetIthLineJthNodeID(int i,int j) const {return Lines[i-1][j-1];}
-	inline int GetIthSurfaceLineLoopID(int i) const {return Surfaces[i-1];}
-	inline int GetIthVolumeSurfaceLoopID(int i) const {return Volumes[i-1];}
-
-
-	inline int GetIthLineLoopJthLineID(int i,int j) const {return LineLoops[i-1][j-1];}
-	inline int GetIthSurfaceLoopJthSurfaceID(int i,int j) const {return SurfaceLoops[i-1][j-1];}
-
-
-	void PrintInfo() const;
 
 private:
-	void ReadGeoFile();
-	void ModifyForCirlce();
-	bool IsIthPointOnSphereSurface(int i);
-	bool IsIthLineOnSphereSurface(int i);
-	bool IsIthSurfaceOnSphereSurface(int i);
-	void ModifyForSphere();
-
-    void ModifyForCubic();
-    // For left
-    bool IsIthPointOnLeftSurface(int i);
-    bool IsIthLineOnLeftSurface(int i);
-    bool IsIthSurfaceOnLeftSurface(int i);
-    // For right
-    bool IsIthPointOnRightSurface(int i);
-    bool IsIthLineOnRightSurface(int i);
-    bool IsIthSurfaceOnRightSurface(int i);
-    // For bottom
-    bool IsIthPointOnBottomSurface(int i);
-    bool IsIthLineOnBottomSurface(int i);
-    bool IsIthSurfaceOnBottomSurface(int i);
-    // For top
-    bool IsIthPointOnTopSurface(int i);
-    bool IsIthLineOnTopSurface(int i);
-    bool IsIthSurfaceOnTopSurface(int i);
-    // For back
-    bool IsIthPointOnBackSurface(int i);
-    bool IsIthLineOnBackSurface(int i);
-    bool IsIthSurfaceOnBackSurface(int i);
-    // For bottom
-    bool IsIthPointOnFrontSurface(int i);
-    bool IsIthLineOnFrontSurface(int i);
-    bool IsIthSurfaceOnFrontSurface(int i);
+    void PrintHelper();
+    void PrintInfo();
 
 private:
+    void ReadGeoFile();
+    void RunJobForCircle();
+    void RunJobFor14thCircle();
+    void RunJobForRect();
+    void RunJobForSphere();
+    void RunJobFor18thSphere();
+    void RunJobForCubic();
+    void RunJobForCylinder();
 
-	enum JobType
-	{
-		CIRCLE,
-		SPHERE,
-        CUBIC 
-	};
+//********************************
+//*** Judge fun
+private:
+    bool IsIthPointOnEdge(const int &i,const int &component,const double &coord) const;
+    bool IsIthLineOnEdge(const int &i,const int &component,const double &coord) const;
+    bool IsIthSurfaceOnEdge(const int &i,const int &component,const double &coord) const;
 
-	string geofilename,newgeofilename;
-	int nPoints,nLines,nSurfaces,nVolumes;
-	int nLineLoops,nSurfaceLoops;
-	vector<vector<int>> Lines;
-	vector<int> Surfaces,Volumes;
-	vector<vector<int>> LineLoops,SurfaceLoops;
+private:
+    void SetTol(double tol){_tolerance=tol;}
+    void SetSize(double size){_Size=size;}
+private:
+    inline int GetPointsNum() const {return _nNodes;}
+    inline int GetLinesNum() const {return _nLines;}
+    inline int GetSurfacesNum() const {return _nSurfaces;}
+    inline int GetVolumesNum() const {return _nVolumes;}
 
-	vector<double> Points;
+    inline int GetMinDim() const {return _nDimMin;}
+    inline int GetMaxDim() const {return _nDimMax;}
 
-	JobType type=CIRCLE;
+private:
+    inline double GetIthNodeJthCoord(const int &i,const int &j)const{
+        return _NodeCoords[(i-1)*3+j-1];
+    }
+    //**********************************
+    inline int GetIthLineJthNodeID(const int &i,const int &j)const{
+        return _Line[(i-1)*2+j-1];
+    }
+    //**********************************
+    inline int GetIthLineLoopLength(const int &i)const{
+        return (int)_LineLoop[i-1].size();
+    }
+    inline int GetIthLineLoopJthLineID(const int &i,const int &j)const{
+        return _LineLoop[i-1][j-1];
+    }
+    //***********************************
+    inline int GetIthSurfaceLoopLength(const int &i)const{
+        return (int)_SurfaceLoop[i-1].size();
+    }
+    inline int GetIthSurfaceLoopJthSurfaceID(const int &i,const int &j)const{
+        return _SurfaceLoop[i-1][j-1];
+    }
 
-	bool PrintFlag;
-	string domain="circle";
-	double size=1.0;
-	double tolerance=1.0e-3;
-	bool IsPrint=true;
-	bool IsSplitSurface=true;
-	bool IsSplitInterface=false;
-	bool IsSplitBoundary=true;
+private:
+    // information for geometric
+    double _Xmin,_Xmax,_Ymin,_Ymax,_Zmin,_Zmax;
+    int _nDim,_nDimMax,_nDimMin;
+    double _tolerance=5.0e-2;
+    double _Size=1.0;
+    int _nNodes,_nLines,_nLineLoops,_nSurfaces,_nSurfaceLoops,_nVolumes;
 
-	double Xmax,Xmin,Ymax,Ymin,Zmax,Zmin;
+    vector<double> _NodeCoords;
+    vector<int> _Line;
+    vector<vector<int>> _LineLoop,_SurfaceLoop;
+
+private:
+    string _GeoFileName,_NewGeoFileName;
+
+
+private:
+    // For job related information
+    enum class JobType{
+        RECTANGLE,
+        CIRCLE,
+        SPHERE,
+        CUBIC,
+        CYLINDER
+    };
+    JobType _JobType;
+    string _Domain;
+private:
+    // array for split information
+    vector<int> _LeftLineIDSet,_RightLineIDSet;
+    vector<int> _BottomLineIDSet,_TopLineIDSet;
+
+    vector<int> _LeftSurfaceIDSet,_RightSurfaceIDSet;
+    vector<int> _BottomSurfaceIDSet,_TopSurfaceIDSet;
+    vector<int> _BackSurfaceIDSet,_FrontSurfaceIDSet;
+
 
 };
 
-#endif 
+#endif // GEOREADER_H

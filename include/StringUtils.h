@@ -22,4 +22,4 @@ vector<double> SplitNumVecFromString(string instr);
 //vector<double> SplitNumVecFromRoundBracketString(string str);
 //vector<double> SplitNumVecFromCurlyBracketString(string str);
 
-#endif
+#endif // 

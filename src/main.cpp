@@ -3,8 +3,8 @@
 #include <chrono>
 
 #include "StringUtils.h"
-
 #include "GeoReader.h"
+
 
 using namespace std;
 
@@ -20,14 +20,13 @@ int main(int args,char *argv[])
 	//*** -help
 	//**********************************************
 	
-	GeoReader reader;
+	
 
 	auto start=chrono::high_resolution_clock::now();
+	GeoReader reader;
 	reader.Run(args,argv);
 	auto end=chrono::high_resolution_clock::now();
-
-	cout<<"*** Time elapsed: "
-	    <<chrono::duration_cast<chrono::microseconds>(end-start).count()/1.0e6<<" [s]"<<endl;
-
+	printf("*** Convert finished! Time elpased: %14.6f [s] !       ***\n",chrono::duration_cast<chrono::microseconds>(end-start).count()/1.0e6);
+	cout<<"******************************************************************"<<endl;
 	return 0;
 }

@@ -1,164 +1,151 @@
 #include "GeoReader.h"
 
-void GeoReader::ReadGeoFile()
-{
-	type=CIRCLE;
+void GeoReader::ReadGeoFile(){
+    string line,str,substr;
+    vector<double> numbers;
+    vector<string> strvec;
 
-	string line;
-	vector<double> numbers;
-	vector<string> strvec;
+    ifstream in;
+	in.open(_GeoFileName.c_str(),ios::in);
 
-	ifstream in;
-	in.open(geofilename.c_str(),ios::in);
+	_Xmax=-1.0e16;_Xmin=1.0e16;
+	_Ymax=-1.0e16;_Ymin=1.0e16;
+	_Zmax=-1.0e16;_Zmin=1.0e16;
+    double xtol,ytol,ztol;
+    xtol=0.0;ytol=0.0;ztol=0.0;
+    _nDimMax=0;_nDimMin=3;_nDim=0;
 
-	Xmax=-1.0e10;Xmin=1.0e10;
-	Ymax=-1.0e10;Ymin=1.0e10;
-	Zmax=-1.0e10;Zmin=1.0e10;
-
-	while(!in.is_open())
-	{
-		cout<<"**** Error: can't open file(="<<geofilename<<")!!!"<<endl;
+    while(!in.is_open()){
+		cout<<"**** Error: can't open file(="<<_GeoFileName<<")!!!"<<endl;
 		cout<<"**** input the correct filename=";
-		cin>>geofilename;
-		in.open(geofilename.c_str(),ios::in);
+		cin>>_GeoFileName;
+		in.open(_GeoFileName.c_str(),ios::in);
 	}
 
-	while(!in.eof())
-	{
-		getline(in,line);
-		if(line.find("Point (")!=string::npos)
-		{
-			numbers=SplitNumVecFromString(line);
-			//cout<<numbers[0]<<" "<<numbers[1]<<" "<<numbers[2]<<endl; 
-			if(numbers.size()!=4)
-			{
-				// Data format:
+    _NodeCoords.clear();_nNodes=0;
+    _Line.clear();_nLines=0;
+    _LineLoop.clear();_nLineLoops=0;
+    _nSurfaces=0;
+    _nSurfaceLoops=0;_nVolumes=0;
+    while(!in.eof()){
+        getline(in,line);
+        if(line.find("Point (")!=string::npos){
+            numbers=SplitNumVecFromString(line);
+            if(numbers.size()!=4){
+                // Data format:
 				// node id, x, y, z
 				cout<<"**** Error: Points must have three components!!!"<<endl;
 				abort();
-			}
-			else
-			{
-				Points.push_back(numbers[1]);
-				Points.push_back(numbers[2]);
-				Points.push_back(numbers[3]);
-				nPoints+=1;
+            }
+            else{
+                _NodeCoords.push_back(numbers[1]);
+                _NodeCoords.push_back(numbers[2]);
+                _NodeCoords.push_back(numbers[3]);
 
-				if(numbers[1]>Xmax) Xmax=numbers[1];
-				if(numbers[1]<Xmin) Xmin=numbers[1];
+                _nNodes+=1;
+                xtol+=numbers[1];
+                ytol+=numbers[2];
+                ztol+=numbers[3];
 
-				if(numbers[2]>Ymax) Ymax=numbers[2];
-				if(numbers[2]<Ymin) Ymin=numbers[2];
+                if(numbers[1]>_Xmax) _Xmax=numbers[1];
+				if(numbers[1]<_Xmin) _Xmin=numbers[1];
 
-				if(numbers[3]>Zmax) Zmax=numbers[3];
-				if(numbers[3]<Zmin) Zmin=numbers[3];
-			}
-		}
-		else if(line.find("Line (")!=string::npos)
-		{
-			// Read line 
-			numbers=SplitNumVecFromString(line);
-			if(numbers.size()!=3)
-			{
-				cout<<"**** Error: Line ()={} must have 3 numbers"<<endl;
+				if(numbers[2]>_Ymax) _Ymax=numbers[2];
+				if(numbers[2]<_Ymin) _Ymin=numbers[2];
+
+				if(numbers[3]>_Zmax) _Zmax=numbers[3];
+				if(numbers[3]<_Zmin) _Zmin=numbers[3];
+            }
+        }
+        else if(line.find("Line (")!=string::npos){
+            numbers=SplitNumVecFromString(line);
+            if(numbers.size()!=3){
+                cout<<"**** Error: Line ()={} must have 3 numbers"<<endl;
 				abort();
-			}
-			else
-			{
-				vector<int> vec;
-				vec.push_back(int(numbers[1]));
-				vec.push_back(int(numbers[2]));
-				Lines.push_back(vec);
-				nLines+=1;
-			}
-		}
-		else if(line.find("Line Loop (")!=string::npos)
-		{
-			// Read line loop
+            }
+            else{
+				_Line.push_back(int(numbers[1]));
+				_Line.push_back(int(numbers[2]));
+				_nLines+=1;
+            }
+            _nDim=1;_nDimMax=1;_nDimMin=1;
+        }
+        else if(line.find("Line Loop (")!=string::npos){
+            // Read line loop
 			numbers=SplitNumVecFromString(line);
-			if(numbers.size()<4)
-			{
-				cout<<"**** Error: Line Loop () must have at least 4 numbers!!!"<<endl;
+            if(numbers.size()<4){
+                cout<<"**** Error: Line Loop () must have at least 4 numbers!!!"<<endl;
 				abort();
-			}
-			else
-			{
-				vector<int> lineid;
+            }
+            else{
+                _nDim=2;_nDimMax=2;_nDimMin=1;
+
+                vector<int> lineid;
 				lineid.clear();
-				for(unsigned int i=1;i<numbers.size();i++)
-				{
-					lineid.push_back(int(numbers[i]));
-				}
-				LineLoops.push_back(lineid);
-				nLineLoops+=1;
-			}
-		}
-		else if(line.find("Plane Surface (")!=string::npos)
-		{
-			// Read Plane surface information
+                for(unsigned int i=1;i<numbers.size();i++){
+                    lineid.push_back(int(numbers[i]));
+                }
+                _LineLoop.push_back(lineid);
+                _nLineLoops+=1;
+            }
+        }
+        else if(line.find("Plane Surface (")!=string::npos){
+            // Read Plane surface information
 			strvec=SplitStringVecBySymbol(line,';');
 			numbers=SplitNumVecFromString(strvec[0]);
-			if(numbers.size()<2)
-			{
-				cout<<"**** Error: Plane Surface () must have 2 numbers!!!"<<endl;
+            if(numbers.size()<2){
+                cout<<"**** Error: Plane Surface () must have 2 numbers!!!"<<endl;
 				abort();
-			}
-			else
-			{
-				Surfaces.push_back(int(numbers[1]));
-				nSurfaces+=1;
-			}
-		}
-		else if(line.find("Surface Loop (")!=string::npos)
-		{
-			// read surface loop
-			numbers=SplitNumVecFromString(line);
-			if(numbers.size()<1+4)
-			{
-				cout<<"**** Error: Surface Loop () must have at least 5 numbers!!!"<<endl;
+            }
+            else{
+                _nSurfaces+=1;
+            }
+        }
+        else if(line.find("Physical Surface (")!=string::npos){
+            // Read Plane surface information
+			strvec=SplitStringVecBySymbol(line,';');
+			numbers=SplitNumVecFromString(strvec[0]);
+            if(numbers.size()<2){
+                cout<<"**** Error: Physical Surface () must have 2 numbers!!!"<<endl;
 				abort();
-			}
-			else
-			{
-				vector<int> surfaceid;
+            }
+            else{
+                
+            }
+        }
+        else if(line.find("Surface Loop (")!=string::npos){
+            // Read Plane surface information
+			strvec=SplitStringVecBySymbol(line,';');
+			numbers=SplitNumVecFromString(strvec[0]);
+            if(numbers.size()<2){
+                cout<<"**** Error: Surface Loop () must have 2 numbers!!!"<<endl;
+				abort();
+            }
+            else{
+                 _nDim=3;_nDimMax=3;
+
+                vector<int> surfaceid;
 				surfaceid.clear();
-				for(unsigned int i=1;i<numbers.size();i++)
-				{
-					surfaceid.push_back(int(numbers[i]));
-				}
-				SurfaceLoops.push_back(surfaceid);
-				nSurfaceLoops+=1;
-			}
-		}
-		else if(line.find("Volume (")!=string::npos)
-		{
-			// Read volume
-			numbers=SplitNumVecFromString(line);
-			if(numbers.size()!=2)
-			{
-				cout<<"**** Error: Volume() must have 2 numbers!!!"<<endl;
+                for(unsigned int i=1;i<numbers.size();i++){
+                    surfaceid.push_back(int(numbers[i]));
+                    // cout<<int(numbers[i])<<" ";
+                }
+                // cout<<endl;
+                _SurfaceLoop.push_back(surfaceid);
+                _nSurfaceLoops+=1;
+            }
+        }
+        else if(line.find("Volume (")!=string::npos){
+            // Read Plane surface information
+			strvec=SplitStringVecBySymbol(line,';');
+			numbers=SplitNumVecFromString(strvec[0]);
+            if(numbers.size()<2){
+                cout<<"**** Error: Volume () must have 2 numbers!!!"<<endl;
 				abort();
-			}
-			else
-			{
-				Volumes.push_back(int(numbers[1]));
-				nVolumes+=1;
-			}
-		}
-	}
-
-	// After all the information are ready,
-	// we must check the data
-	if(nLineLoops!=nSurfaces)
-	{
-		cout<<"**** Error: nLineLoops("<<nLineLoops<<")!=nSurfaces("<<nSurfaces<<") !!!"<<endl;
-		abort();
-	}
-
-	if(nSurfaceLoops!=nVolumes)
-	{
-		cout<<"**** Error: nSurfaceLoops("<<nSurfaceLoops<<")!= nVolumes("<<nVolumes<<") !!!"<<endl;
-		abort();
-	}
-
+            }
+            else{
+                _nVolumes+=1;
+            }
+        }
+    }
 }
